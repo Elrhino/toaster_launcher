@@ -12,7 +12,7 @@ When I first heard about GWT/GWTP I thought it was some kind of STD, but when I 
 ## Getting started
 To get started, I strongly suggest watching our how-to video on [how to create a basic project](TODO). This will create a basic "Hello World!" application for you generated from our Maven [archetypes](TODO).
 
-## Creating a basic form
+## View section: Title
 From the basic archetype, we're going to create what we need in order to send our toaster into space. So, let's create a basic POJO representing our toaster:
 
 ```java
@@ -76,11 +76,9 @@ Let's declare some fields to handle the toaster launch parameters:
 </ui:UiBinder>
 ```
 
-`ui:field="someName"` is how you identifies your widgets so you can retrieve them later in your View.
+The `ui:field="someName"` attribute is how you identifies your widgets so you can retrieve them later in your View.
 
-Now that we have our basic widgets declared, we need to validate the input just to be sure that a wrong value doesn't turn our toaster into fireworks.
-
-First, we need to declare the variables in which the widgets we declared will be hold:
+First, we need to declare the variables that will be associated with your widgets in your View.
 
 ```java
 public class LauncherView extends ViewImpl implements LauncherPresenter.MyView {
@@ -100,21 +98,12 @@ public class LauncherView extends ViewImpl implements LauncherPresenter.MyView {
     }
 
     public void onLaunch() {
-        validateFields();
-
         // TODO: Send launch parameters to the LauncherPresenter.
-    }
-
-    private boolean validateFields() {
-        String coordinates = launchCoordinates.getText();
-        String power = launchPower.getText();
-
-        return coordinates.matches("([a-zA-Z;])") && power.matches("([0-9])");
     }
 }
 ```
 
-Now that we're sure to have valid launch parameters, what we need is a way to send them to the `LauncherPresenter` so that it might process them. However, in order to do so we also need a way to detect click events on the `launchButton`.
+Now that we have access to the widgets values, what we need is a way to send them to the `LauncherPresenter` so that it might process them. However, in order to do so we also need a way to detect click events on the `launchButton`.
 
 In GWTP, [UiHandlers](TODO) are great to delegate some of the View Events to the Presenter and that's whats we're gonna use here. We need a new interface that will extends `UiHandlers`.
 
@@ -131,22 +120,21 @@ Now, we'll be able to bind the `onLaunch` method to a ClickEvent using the `@UiH
 ```java
 @UiHandler("launchButton")
 public void onLaunch(ClickEvent event) {
-    validateFields();
-
     // TODO: Send launch parameters to the LauncherPresenter.
 }
 ```
 
-To send the data to the Presenter we first need to tell the View to use the `LauncherUiHandlers`. We do this by extending `LauncherView` with ` ViewWithUiHandlers<LauncherUiHandlers>` and then we'll be able to call the `onLaunch()` method from `LauncherUiHandlers`.
+To send the data to the Presenter we first need to tell the View to use the `LauncherUiHandlers`. We do this by extending `LauncherView` with ` ViewWithUiHandlers<LauncherPresenter>` and this will gives us access to `getUiHandlers`.
 
 ```java
 @UiHandler("launchButton")
 public void onLaunch(ClickEvent event) {
-    if (validateFields()) {
-        getUiHandlers().onLaunch(launchCoordinates.getText(), launchPower.getText());
-    }
+    getUiHandlers().onLaunch(launchCoordinates.getText(), launchPower.getText());
 }
 ```
+
+## Presenter section: Title
+Now that we have a LauncherView with some basic controls and a UiHandler to delegate event handling to the Presenter, we can write the LauncherPresenter to handle logic.
 
 ```java
 public class LauncherPresenter extends Presenter<LauncherPresenter.MyView, LauncherPresenter.MyProxy> {
@@ -168,5 +156,37 @@ public class LauncherPresenter extends Presenter<LauncherPresenter.MyView, Launc
 }
 ```
 
-## Writing some logic
-...
+In order for the LauncherPresenter to use LauncherUiHandlers, we need to do the following:
+1. Implements LauncherUiHandlers for the LauncherPresenter
+1. Extend MyView interface with HasUiHandlers<LauncherPresenter>
+1. Set the UiHandler for the View: `getView().setUiHandlers(this)`
+
+Then we'll need to implement the `onLaunch()` method:
+
+```java
+@Override
+public void onLaunch(String launchCoordinates, String launchPower) {
+    // TODO: Validate values.
+
+    // TODO: Do something with the values.
+}
+```
+
+Now we're going to add validation so we're sure wrong values will not turn our toaster into a flaming pile of dust.
+
+```java
+private boolean validateFields(String coordinates, String power) {
+    return coordinates.matches("[0-9]{3};[0-9]{3};[0-9]{3}") && power.matches("[0-9]");
+}
+```
+
+```java
+@Override
+public void onLaunch(String coordinates, String power) {
+    if (validateFields(coordinates, power)) {
+        // TODO: Do something with the values. Process with service.
+    }
+}
+```
+
+In the next section, we'll see how the toaster will process the values using RestDispatch
