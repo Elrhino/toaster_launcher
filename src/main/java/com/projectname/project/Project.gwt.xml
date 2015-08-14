@@ -4,6 +4,7 @@
 <module rename-to='Project'>
     <inherits name='com.google.gwt.user.User'/>
     <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
+    <inherits name="com.gwtplatform.dispatch.rest.DispatchRest"/>
 
     <extend-configuration-property name="gin.ginjector.modules"
                                    value="com.projectname.project.client.gin.ClientModule"/>

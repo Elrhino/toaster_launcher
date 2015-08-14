@@ -1,32 +1,15 @@
-# Title
-...
-This tutorial will be heavily inspired on the ArcBees developer's website [tutorial](TODO).
-
-...
-You won't be able to send your toaster into space after this tutorial, but it will be close enough...
-...
-
-## Why GWT/GWTP is awesome
+# GWTP Beginner's tutorial
 When I first heard about GWT/GWTP I thought it was some kind of STD, but when I realized it was Java compiling into JavaScript, it got all my attention. Like many people, except the purists (which I respect), I'm not a big fan of JavaScript. Especially when it comes down to writing logic. So here we have GWTP that does the hard work for you and offers you tools that implements all the best practices on how to build web applications with GWT.
 
+This tutorial will be heavily inspired on the ArcBees developer's website [tutorial][tutorial]. You won't be able to send your toaster into space after this tutorial, but it will be close enough...
+
 ## Getting started
-To get started, I strongly suggest watching our how-to video on [how to create a basic project](TODO). This will create a basic "Hello World!" application for you generated from our Maven [archetypes](TODO).
+To get started, I strongly suggest watching our how-to video on [how to create a basic project](TODO). This will create a basic "Hello World!" application for you generated from our Maven [archetypes][archetypes].
 
-## View section: Title
-From the basic archetype, we're going to create what we need in order to send our toaster into space. So, let's create a basic POJO representing our toaster:
+## The Visual: Writing the View
+From the basic archetype, we're going to create what we need in order to send our toaster into space.
 
-```java
-public class FlyingToaster() {
-    private String coordinates; // X, Y, Z separated by semicolons ';'
-    private String power;
-
-    ...
-}
-```
-
-In GWTP, there's this concept of Presenter-View pair. They always come together. The Presenter handles the logic and the View only displays what it's told to. **The Presenter don't care about what the View does and the View just don't know anything at all.**
-
-So to create our form, we won't need a Presenter yet. What we need is a View class that will use a [UiBinder](TODO).
+In GWTP, there's this concept of Presenter-View pair. They always come together. The [Presenter][presenter] handles the logic and the [View][view] only displays what it's told to. So to create our form, we won't need a Presenter yet. What we need is a View class that will use a [UiBinder][uibinder].
 
 Let's first create a new package under `client/application/launcher`. In this package we'll create a class named `LauncherView`. From this View, we will create some fields to control the toaster launch.
 
@@ -48,7 +31,7 @@ public class LauncherView extends ViewImpl implements LauncherPresenter.MyView {
 }
 ```
 
-As you might have guess, the View implements `LauncherPresenter.MyView` which does not exists yet. We will get into that shortly. But first, we need to talk about *UiBinder*. [UiBinders](TODO) allow you to declare your HTML and GWT Widgets in XML format. So a View that uses a UiBinder will actually be composed of 2 files, a Java file containing your View class and a XML file containing your HTML.
+As you might have guess, the View implements `LauncherPresenter.MyView` which does not exists yet. We will get into that shortly. But first, we need to talk about UiBinder. [UiBinders][uibinder] allow you to declare your HTML and GWT Widgets in XML format. So a View that uses a UiBinder will actually be composed of 2 files, a Java file containing your View class and a XML file containing your HTML.
 
 Now all you have to do is to declare an interface extending UiBinder, like we did in the example above, and create a new XML file named after the View. So in this case, we'll create `LauncherView.ui.xml`.
 
@@ -105,7 +88,7 @@ public class LauncherView extends ViewImpl implements LauncherPresenter.MyView {
 
 Now that we have access to the widgets values, what we need is a way to send them to the `LauncherPresenter` so that it might process them. However, in order to do so we also need a way to detect click events on the `launchButton`.
 
-In GWTP, [UiHandlers](TODO) are great to delegate some of the View Events to the Presenter and that's whats we're gonna use here. We need a new interface that will extends `UiHandlers`.
+In GWTP, [UiHandlers][uihandlers] are great to delegate some of the View Events to the Presenter and that's whats we're gonna use here. We need a new interface that will extends `UiHandlers`.
 
 ```java
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -133,7 +116,7 @@ public void onLaunch(ClickEvent event) {
 }
 ```
 
-## Presenter section: Title
+## The Base: Writing the Presenter
 Now that we have a LauncherView with some basic controls and a UiHandler to delegate event handling to the Presenter, we can write the LauncherPresenter to handle logic.
 
 ```java
@@ -190,3 +173,10 @@ public void onLaunch(String coordinates, String power) {
 ```
 
 In the next section, we'll see how the toaster will process the values using RestDispatch
+
+[uibinder]: http://www.gwtproject.org/doc/latest/DevGuideUiBinder.html
+[tutorial]: http://dev.arcbees.com/gwtp/tutorials/
+[archetypes]: https://github.com/ArcBees/Arcbees-Archetypes
+[presenter]: http://dev.arcbees.com/gwtp/core/presenters/index.html
+[view]: http://dev.arcbees.com/gwtp/core/presenters/view.html
+[uihandlers]: http://dev.arcbees.com/gwtp/core/presenters/view-with-ui-handlers.html
