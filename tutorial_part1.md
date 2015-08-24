@@ -1,17 +1,17 @@
 # GWTP Beginner's tutorial
-When I first heard about GWT/GWTP I thought it was some kind of STD, but when I realized it was Java compiling into JavaScript, it got all my attention. Like many people, except the purists (which I respect), I'm not a big fan of JavaScript. Especially when it comes down to writing logic. So here we have GWTP that does the hard work for you and offers you tools that implements all the best practices on how to build web applications with GWT.
+When I first heard about GWT or "gwit", I thought it sounded like some kind of STD, but when I realized it was Java compiling into JavaScript, it got all my attention. Like many people, except the purists (which I respect), I'm not a big fan of JavaScript. Especially when it comes down to writing logic. So here we have GWTP that does the hard work for you and offers you tools that implements all the best practices on how to build web applications with GWT.
 
 This tutorial will be heavily inspired on the ArcBees developer's website [tutorial][tutorial]. You won't be able to send your toaster into space after this tutorial, but it will be close enough...
 
 ## Getting started
-To get started, I strongly suggest watching our how-to video on [how to create a basic project](TODO). This will create a basic "Hello World!" application for you generated from our Maven [archetypes][archetypes].
+To get started, I strongly suggest watching our how-to video on [how to create a basic project][generate]. This will create a basic "Hello World!" application for you generated from our Maven [archetypes][archetypes].
 
 ## The Visual: Writing the View
 From the basic archetype, we're going to create what we need in order to send our toaster into space.
 
 In GWTP, there's this concept of Presenter-View pair. They always come together. The [Presenter][presenter] handles the logic and the [View][view] only displays what it's told to. So to create our form, we won't need a Presenter yet. What we need is a View class that will use a [UiBinder][uibinder].
 
-Let's first create a new package under `client/application/launcher`. In this package we'll create a class named `LauncherView`. From this View, we will create some fields to control the toaster launch.
+Let's first create a new package under `client/application/launcher`. In this package we'll create a class named `LauncherView`. From this View, we will create some fields that will hold the toaster launch parameters.
 
 ```java
 import javax.inject.Inject;
@@ -98,7 +98,7 @@ public interface launcherUiHandlers extends UiHandlers {
 }
 ```
 
-Now, we'll be able to bind the `onLaunch` method to a ClickEvent using the `@UiHandler("someIdentifier")` annotation. To specify which type of event to listen to, we simply pass this event as a method parameter.
+Now, we'll be able to bind the `onLaunch()` method to a ClickEvent using the `@UiHandler("someIdentifier")` annotation. To specify which type of event to listen to, we simply pass the event type as a method parameter.
 
 ```java
 @UiHandler("launchButton")
@@ -172,7 +172,7 @@ public void onLaunch(String coordinates, String power) {
 }
 ```
 
-In the next section, we'll see how the toaster will process the values using RestDispatch
+In the next section, we'll see how the toaster will process the values using [RestDispatch][rest], we'll also protect the LauncherPresenter with a [Gatekeeper][security]. The user will need to login before he can access the LauncherPresenter. For this, we'll create LoginPresenter that will use a [NestedSlot][slots].
 
 [uibinder]: http://www.gwtproject.org/doc/latest/DevGuideUiBinder.html
 [tutorial]: http://dev.arcbees.com/gwtp/tutorials/
@@ -180,3 +180,8 @@ In the next section, we'll see how the toaster will process the values using Res
 [presenter]: http://dev.arcbees.com/gwtp/core/presenters/index.html
 [view]: http://dev.arcbees.com/gwtp/core/presenters/view.html
 [uihandlers]: http://dev.arcbees.com/gwtp/core/presenters/view-with-ui-handlers.html
+[execute]: https://youtu.be/6_MQSJy92m0
+[generate]: https://youtu.be/Im1DGozNCsU
+[slots]: http://localhost:8080/gwtp/core/slots/
+[rest]: http://localhost:8080/gwtp/communication/index.html
+[security]: http://localhost:8080/gwtp/core/security/
