@@ -1,34 +1,17 @@
-# Title
-...
-This tutorial will be heavily inspired on the ArcBees developer's website [tutorial](TODO).
+# GWTP Beginner's tutorial
+When I first heard about GWT or "gwit", I thought it was "yet another JS framework" but when I realized it was a framework compiling Java into JavaScript it got all my attention. Like many people, except the purists (which I respect), I'm not a big fan of JavaScript. Especially when it comes down to writing logic. So here we have GWTP that does the hard work for you and offers you tools that implements all the best practices on how to build web applications with GWT.
 
-...
-You won't be able to send your toaster into space after this tutorial, but it will be close enough...
-...
-
-## Why GWT/GWTP is awesome
-When I first heard about GWT/GWTP I thought it was some kind of STD, but when I realized it was Java compiling into JavaScript, it got all my attention. Like many people, except the purists (which I respect), I'm not a big fan of JavaScript. Especially when it comes down to writing logic. So here we have GWTP that does the hard work for you and offers you tools that implements all the best practices on how to build web applications with GWT.
+This tutorial will be heavily inspired on the ArcBees developer's website [tutorial][tutorial]. You won't be able to send your toaster into space after this tutorial, but it will be close enough...
 
 ## Getting started
-To get started, I strongly suggest watching our how-to video on [how to create a basic project](TODO). This will create a basic "Hello World!" application for you generated from our Maven [archetypes](TODO).
+To get started, I strongly suggest watching our how-to video on [how to create a basic project][generate]. This will create a basic "Hello World!" application for you generated from our Maven [archetypes][archetypes]. You can also use our [GWTP plugin for IntelliJ][plugin] if you wish to generate the files yourself.
 
-## Creating a basic form
-From the basic archetype, we're going to create what we need in order to send our toaster into space. So, let's create a basic POJO representing our toaster:
+## The Visual: Writing the View
+From the basic archetype, we're going to create what we need in order to send our toaster into space.
 
-```java
-public class FlyingToaster() {
-    private String coordinates; // X, Y, Z separated by semicolons ';'
-    private String power;
+In GWTP, there's this concept of Presenter-View pair. If you're not familiar with these terms, it refers to the MVP architecture. The [Presenter][presenter] is where all of the client-side logic should be written (i.e. validation, manipulation to the model layer, etc) The [View][view] only displays what it's told to by the Presenter and should not contain any logic. It takes care of browser specific events and is the only layer aware of the DOM elements. So to create our form, we won't need a Presenter just yet, but a View.
 
-    ...
-}
-```
-
-In GWTP, there's this concept of Presenter-View pair. They always come together. The Presenter handles the logic and the View only displays what it's told to. **The Presenter don't care about what the View does and the View just don't know anything at all.**
-
-So to create our form, we won't need a Presenter yet. What we need is a View class that will use a [UiBinder](TODO).
-
-Let's first create a new package under `client/application/launcher`. In this package we'll create a class named `LauncherView`. From this View, we will create some fields to control the toaster launch.
+Let's first create a new package under `client/application/launcher`. In this package we'll create a class named `LauncherView`. From this View, we will create some fields that will hold the toaster launch parameters.
 
 ```java
 import javax.inject.Inject;
@@ -48,7 +31,7 @@ public class LauncherView extends ViewImpl implements LauncherPresenter.MyView {
 }
 ```
 
-As you might have guess, the View implements `LauncherPresenter.MyView` which does not exists yet. We will get into that shortly. But first, we need to talk about *UiBinder*. [UiBinders](TODO) allow you to declare your HTML and GWT Widgets in XML format. So a View that uses a UiBinder will actually be composed of 2 files, a Java file containing your View class and a XML file containing your HTML.
+As you might have guessed, the View implements `LauncherPresenter.MyView` which does not exist yet. We will get into that shortly. But first, we need to talk about UiBinder. [UiBinder][uibinder] allows you to declare your HTML and GWT Widgets in XML format. So a View that uses a UiBinder will actually be composed of 2 files, a Java file containing your View class and a XML file containing your HTML.
 
 Now all you have to do is to declare an interface extending UiBinder, like we did in the example above, and create a new XML file named after the View. So in this case, we'll create `LauncherView.ui.xml`.
 
@@ -76,11 +59,9 @@ Let's declare some fields to handle the toaster launch parameters:
 </ui:UiBinder>
 ```
 
-`ui:field="someName"` is how you identifies your widgets so you can retrieve them later in your View.
+The `ui:field="someName"` attribute is how you identifies your widgets so you can retrieve them later in your View.
 
-Now that we have our basic widgets declared, we need to validate the input just to be sure that a wrong value doesn't turn our toaster into fireworks.
-
-First, we need to declare the variables in which the widgets we declared will be hold:
+First, we need to declare the variables that will be associated with your widgets in your View.
 
 ```java
 public class LauncherView extends ViewImpl implements LauncherPresenter.MyView {
@@ -100,23 +81,14 @@ public class LauncherView extends ViewImpl implements LauncherPresenter.MyView {
     }
 
     public void onLaunch() {
-        validateFields();
-
         // TODO: Send launch parameters to the LauncherPresenter.
-    }
-
-    private boolean validateFields() {
-        String coordinates = launchCoordinates.getText();
-        String power = launchPower.getText();
-
-        return coordinates.matches("([a-zA-Z;])") && power.matches("([0-9])");
     }
 }
 ```
 
-Now that we're sure to have valid launch parameters, what we need is a way to send them to the `LauncherPresenter` so that it might process them. However, in order to do so we also need a way to detect click events on the `launchButton`.
+Now that we have access to the widgets values, what we need is a way to send them to the `LauncherPresenter` so that it can process them. However, in order to do so we also need a way to detect click events on the `launchButton`.
 
-In GWTP, [UiHandlers](TODO) are great to delegate some of the View Events to the Presenter and that's whats we're gonna use here. We need a new interface that will extends `UiHandlers`.
+In GWTP, [UiHandlers][uihandlers] are great to delegate some of the View Events to the Presenter and that's whats we're going to use here. We need a new interface that will extend `UiHandlers`.
 
 ```java
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -126,27 +98,26 @@ public interface launcherUiHandlers extends UiHandlers {
 }
 ```
 
-Now, we'll be able to bind the `onLaunch` method to a ClickEvent using the `@UiHandler("someIdentifier")` annotation. To specify which type of event to listen to, we simply pass this event as a method parameter.
+Now, we'll be able to bind the `onLaunch()` method to a ClickEvent using the `@UiHandler("someIdentifier")` annotation. To specify which type of event to listen to, we simply pass the event type as a method parameter.
 
 ```java
 @UiHandler("launchButton")
 public void onLaunch(ClickEvent event) {
-    validateFields();
-
     // TODO: Send launch parameters to the LauncherPresenter.
 }
 ```
 
-To send the data to the Presenter we first need to tell the View to use the `LauncherUiHandlers`. We do this by extending `LauncherView` with ` ViewWithUiHandlers<LauncherUiHandlers>` and then we'll be able to call the `onLaunch()` method from `LauncherUiHandlers`.
+To send the data to the Presenter we first need to tell the View to use the `LauncherUiHandlers`. We do this by extending `LauncherView` with `ViewWithUiHandlers<LauncherPresenter>` and this will give us access to `getUiHandlers`.
 
 ```java
 @UiHandler("launchButton")
 public void onLaunch(ClickEvent event) {
-    if (validateFields()) {
-        getUiHandlers().onLaunch(launchCoordinates.getText(), launchPower.getText());
-    }
+    getUiHandlers().onLaunch(launchCoordinates.getText(), launchPower.getText());
 }
 ```
+
+## The Base: Writing the Presenter
+Now that we have a LauncherView with some basic controls and a UiHandler to delegate event handling to the Presenter, we can write the LauncherPresenter to handle logic.
 
 ```java
 public class LauncherPresenter extends Presenter<LauncherPresenter.MyView, LauncherPresenter.MyProxy> {
@@ -168,5 +139,50 @@ public class LauncherPresenter extends Presenter<LauncherPresenter.MyView, Launc
 }
 ```
 
-## Writing some logic
-...
+In order for the LauncherPresenter to use LauncherUiHandlers, we need to do the following:
+1. Implement LauncherUiHandlers for the LauncherPresenter
+1. Extend MyView interface with `HasUiHandlers<LauncherPresenter>`
+1. Set the UiHandler for the View: `getView().setUiHandlers(this)`
+
+Then we'll need to implement the `onLaunch()` method:
+
+```java
+@Override
+public void onLaunch(String launchCoordinates, String launchPower) {
+    // TODO: Validate values.
+
+    // TODO: Do something with the values.
+}
+```
+
+Now we're going to add validation so we're sure wrong values will not turn our toaster into a flaming pile of dust.
+
+```java
+private boolean validateFields(String coordinates, String power) {
+    return coordinates.matches("[0-9]{3};[0-9]{3};[0-9]{3}") && power.matches("[0-9]");
+}
+```
+
+```java
+@Override
+public void onLaunch(String coordinates, String power) {
+    if (validateFields(coordinates, power)) {
+        // TODO: Do something with the values. Process with service.
+    }
+}
+```
+
+In the next section, we'll see how the toaster will process the values using [RestDispatch][rest], we'll also protect the LauncherPresenter with a [Gatekeeper][security]. The user will need to login before he can access the LauncherPresenter. For this, we'll create a LoginPresenter that will use a [NestedSlot][slots].
+
+[uibinder]: http://www.gwtproject.org/doc/latest/DevGuideUiBinder.html
+[tutorial]: http://dev.arcbees.com/gwtp/tutorials/
+[archetypes]: https://github.com/ArcBees/Arcbees-Archetypes
+[presenter]: http://dev.arcbees.com/gwtp/core/presenters/index.html
+[view]: http://dev.arcbees.com/gwtp/core/presenters/view.html
+[uihandlers]: http://dev.arcbees.com/gwtp/core/presenters/view-with-ui-handlers.html
+[execute]: https://youtu.be/6_MQSJy92m0
+[generate]: https://youtu.be/Im1DGozNCsU
+[slots]: http://dev.arcbees.com/gwtp/core/slots/
+[rest]: http://dev.arcbees.com/gwtp/communication/index.html
+[security]: http://dev.arcbees.com/gwtp/core/security/
+[plugin]: https://github.com/ArcBees/gwtp-idea-plugin

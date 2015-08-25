@@ -4,6 +4,6 @@
     <g:HTMLPanel>
         <g:TextBox ui:field="launchCoordinates"/><br/>
         <g:TextBox ui:field="launchPower"/><br/>
-        <g:Button ui:field="launchButton"/>
+        <g:Button ui:field="launchButton" text="LAUNCH!"/>
     </g:HTMLPanel>
 </ui:UiBinder>

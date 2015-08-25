@@ -9,9 +9,10 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class LauncherView extends ViewWithUiHandlers<LauncherUiHandlers> implements LauncherPresenter.MyView {
+public class LauncherView extends ViewWithUiHandlers<LauncherPresenter> implements LauncherPresenter.MyView {
     interface Binder extends UiBinder<Widget, LauncherView> {
     }
 
@@ -29,15 +30,6 @@ public class LauncherView extends ViewWithUiHandlers<LauncherUiHandlers> impleme
 
     @UiHandler("launchButton")
     public void onLaunch(ClickEvent event) {
-        if (validateFields()) {
-            getUiHandlers().onLaunch(launchCoordinates.getText(), launchPower.getText());
-        }
-    }
-
-    private boolean validateFields() {
-        String coordinates = launchCoordinates.getText();
-        String power = launchPower.getText();
-
-        return coordinates.matches("([a-zA-Z;])") && power.matches("([0-9])");
+        getUiHandlers().onLaunch(launchCoordinates.getText(), launchPower.getText());
     }
 }
