@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.projectname.project.client.api.Toaster;
 
 public class ToasterViewWidget extends ViewWithUiHandlers<ToasterWidgetUiHandlers>
         implements ToasterPresenterWidget.MyView {
@@ -22,7 +23,7 @@ public class ToasterViewWidget extends ViewWithUiHandlers<ToasterWidgetUiHandler
     @UiField
     TextBox coordinates;
     @UiField
-    TextBox thrust;
+    TextBox power;
 
     @Inject
     public ToasterViewWidget(Binder binder) {
@@ -31,7 +32,14 @@ public class ToasterViewWidget extends ViewWithUiHandlers<ToasterWidgetUiHandler
 
     @UiHandler("fetchButton")
     void onFetchToaster(ClickEvent clickEvent) {
+        getUiHandlers().fetchToaster();
+    }
 
+    @Override
+    public void setToaster(Toaster toaster) {
+        name.setText(toaster.getName());
+        coordinates.setText(toaster.getCoordinates());
+        power.setText(String.valueOf(toaster.getPower()));
     }
 }
 

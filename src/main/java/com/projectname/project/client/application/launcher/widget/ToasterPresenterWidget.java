@@ -7,11 +7,13 @@ import com.gwtplatform.dispatch.rest.client.RestDispatch;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
-import com.projectname.project.client.application.ToasterResource;
+import com.projectname.project.client.api.Toaster;
+import com.projectname.project.client.api.ToasterResource;
 
 public class ToasterPresenterWidget extends PresenterWidget<ToasterPresenterWidget.MyView>
         implements ToasterWidgetUiHandlers {
     interface MyView extends View, HasUiHandlers<ToasterWidgetUiHandlers> {
+        void setToaster(Toaster toaster);
     }
 
     private final RestDispatch dispatch;
@@ -35,13 +37,12 @@ public class ToasterPresenterWidget extends PresenterWidget<ToasterPresenterWidg
         dispatch.execute(resource.getToaster(), new AsyncCallback<Toaster>() {
             @Override
             public void onFailure(Throwable caught) {
-
             }
 
             @Override
             public void onSuccess(Toaster toaster) {
-
+                getView().setToaster(toaster);
             }
-        })
+        });
     }
 }

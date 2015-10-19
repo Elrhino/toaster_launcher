@@ -7,9 +7,9 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
 public class LauncherView extends ViewWithUiHandlers<LauncherPresenter> implements LauncherPresenter.MyView {
@@ -22,10 +22,14 @@ public class LauncherView extends ViewWithUiHandlers<LauncherPresenter> implemen
     TextBox launchPower;
     @UiField
     Button launchButton;
+    @UiField
+    SimplePanel container;
 
     @Inject
     LauncherView(Binder uiBinder) {
         initWidget(uiBinder.createAndBindUi(this));
+
+        bindSlot(LauncherPresenter.SLOT_CONTENT, container);
     }
 
     @UiHandler("launchButton")
