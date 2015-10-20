@@ -28,8 +28,8 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
     }
 
     // Credentials are stored here for demo purpose only.
-    private static final String USERNAME = "admin";
-    private static final String PASSWORD = "admin123";
+    private static final String USERNAME = "s3cr3t";
+    private static final String PASSWORD = "p4ssw0rd";
 
     private CurrentUser currentUser;
     private PlaceManager placeManager;

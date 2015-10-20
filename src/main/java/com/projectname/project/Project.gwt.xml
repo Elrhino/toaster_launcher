@@ -9,7 +9,6 @@
     <extend-configuration-property name="gin.ginjector.modules"
                                    value="com.projectname.project.client.gin.ClientModule"/>
 
-    <!-- Specify the paths for translatable code                    -->
     <source path='client'/>
     <source path='shared'/>
 
